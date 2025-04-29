@@ -43,7 +43,7 @@ public class MainController {
         try {
             return ResponseEntity.ok(taskService.getTaskById(id));
         } catch (NoSuchElementException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            return ResponseEntity.notFound().build();
         }
     }
     @Loggable
@@ -53,7 +53,7 @@ public class MainController {
         try {
             return ResponseEntity.ok(taskService.updateTask(id,taskDTO));
         } catch (NoSuchElementException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            return ResponseEntity.notFound().build();
         }
     }
     @Loggable
@@ -64,7 +64,7 @@ public class MainController {
             taskService.deleteTask(id);
             return ResponseEntity.noContent().build();
         } catch (NoSuchElementException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResponseEntity.notFound().build();
         }
     }
 

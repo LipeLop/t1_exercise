@@ -46,7 +46,7 @@ public class TaskService {
         task.setDescription(taskDTO.getDescription());
         task.setUserId(taskDTO.getUserId());
         taskRepository.save(task);
-        return taskDTO;
+        return taskMapper.toDTO(task);
     }
 
     @Loggable
