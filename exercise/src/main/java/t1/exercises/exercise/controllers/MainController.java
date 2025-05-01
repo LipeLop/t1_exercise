@@ -27,45 +27,33 @@ public class MainController {
     @Loggable
     @TimeRecorder
     @PostMapping
-    public ResponseEntity<TaskDTO> createTask(@RequestBody TaskDTO taskDTO){
-        return ResponseEntity.ok(taskService.saveTask(taskDTO));
+    public TaskDTO createTask(@RequestBody TaskDTO taskDTO){
+        return taskService.saveTask(taskDTO);
     }
     @Loggable
     @TimeRecorder
     @GetMapping
-    public ResponseEntity<List<TaskDTO>> getAllTasks(){
-        return ResponseEntity.ok(taskService.getAllTask());
+    public List<TaskDTO> getAllTasks(){
+        return taskService.getAllTask();
     }
     @Loggable
     @TimeRecorder
     @GetMapping("/{id}")
-    public ResponseEntity<TaskDTO> getTaskById(@PathVariable int id){
-        try {
-            return ResponseEntity.ok(taskService.getTaskById(id));
-        } catch (NoSuchElementException e){
-            return ResponseEntity.notFound().build();
-        }
+    public TaskDTO getTaskById(@PathVariable int id){
+        return taskService.getTaskById(id);
     }
     @Loggable
     @TimeRecorder
     @PutMapping("/{id}")
-    public ResponseEntity<TaskDTO> updateTask(@PathVariable int id, @RequestBody TaskDTO taskDTO){
-        try {
-            return ResponseEntity.ok(taskService.updateTask(id,taskDTO));
-        } catch (NoSuchElementException e){
-            return ResponseEntity.notFound().build();
-        }
+    public TaskDTO updateTask(@PathVariable int id, @RequestBody TaskDTO taskDTO){
+        return taskService.updateTask(id,taskDTO);
     }
     @Loggable
     @TimeRecorder
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTask(@PathVariable int id){
-        try {
-            taskService.deleteTask(id);
-            return ResponseEntity.noContent().build();
-        } catch (NoSuchElementException e){
-            return ResponseEntity.notFound().build();
-        }
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteTask(@PathVariable int id){
+        taskService.deleteTask(id);
     }
 
 }
