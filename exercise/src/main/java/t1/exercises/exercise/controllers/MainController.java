@@ -3,6 +3,8 @@ package t1.exercises.exercise.controllers;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.*;
 import t1.exercises.exercise.annotations.ExceptionHandler;
 import t1.exercises.exercise.annotations.Loggable;
@@ -55,5 +57,4 @@ public class MainController {
     public void deleteTask(@PathVariable int id){
         taskService.deleteTask(id);
     }
-
 }

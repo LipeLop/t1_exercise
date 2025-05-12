@@ -20,11 +20,13 @@ public class TaskService {
 
     private final TaskRepository taskRepository;
     private final TaskMapper taskMapper;
+    private final ChangesService changesService;
 
 
-    public TaskService(TaskRepository taskRepository, TaskMapper taskMapper) {
+    public TaskService(TaskRepository taskRepository, TaskMapper taskMapper, ChangesService changesService) {
         this.taskRepository = taskRepository;
         this.taskMapper = taskMapper;
+        this.changesService = changesService;
     }
 
     @Loggable
@@ -42,6 +44,8 @@ public class TaskService {
     public TaskDTO updateTask(int id, TaskDTO taskDTO) {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Task not found"));
+        changesService.isStatusUpdate(task, taskDTO);
+        task.setStatus(taskDTO.getStatus());
         task.setTitle(taskDTO.getTitle());
         task.setDescription(taskDTO.getDescription());
         task.setUserId(taskDTO.getUserId());

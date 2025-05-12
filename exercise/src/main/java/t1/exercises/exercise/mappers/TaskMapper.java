@@ -11,7 +11,7 @@ import java.util.List;
 public class TaskMapper {
 
     public Task toTask(TaskDTO taskDTO) {
-        Task task = new Task(taskDTO.getTitle(), taskDTO.getDescription(), taskDTO.getUserId());
+        Task task = new Task(taskDTO.getTitle(),taskDTO.getStatus(), taskDTO.getDescription(), taskDTO.getUserId());
         return task;
     }
 
@@ -23,7 +23,7 @@ public class TaskMapper {
         return taskDTOs;
     }
     public TaskDTO toDTO(Task task) {
-        TaskDTO taskDTO = new TaskDTO(task.getId(),task.getTitle(), task.getDescription(), task.getUserId());
+        TaskDTO taskDTO = new TaskDTO(task.getId(),task.getStatus(),task.getTitle(), task.getDescription(), task.getUserId());
         return taskDTO;
     }
 }
