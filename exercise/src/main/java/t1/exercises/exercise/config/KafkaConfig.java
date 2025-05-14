@@ -1,5 +1,6 @@
 package t1.exercises.exercise.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -9,13 +10,17 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.*;
+import org.springframework.kafka.listener.ContainerProperties;
+import org.springframework.kafka.listener.DefaultErrorHandler;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
+import org.springframework.util.backoff.FixedBackOff;
 import t1.exercises.exercise.dtos.TaskDTO;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @Configuration
 public class KafkaConfig {
 
@@ -47,6 +52,16 @@ public class KafkaConfig {
         ConcurrentKafkaListenerContainerFactory<String, TaskDTO> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
+        factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL);
+        DefaultErrorHandler errorHandler = new DefaultErrorHandler(
+                new FixedBackOff(2000L, 2L)
+        );
+        errorHandler.setRetryListeners((record, ex, deliveryAttempt) ->
+                log.error("Attempt {} failed for record with key {}, cause: {}", deliveryAttempt, record.key(), ex.getMessage())
+        );
+
+        factory.setCommonErrorHandler(errorHandler);
+
         return factory;
     }
     @Bean

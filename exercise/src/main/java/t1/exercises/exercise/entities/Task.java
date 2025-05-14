@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import t1.exercises.exercise.enums.TaskStatus;
 
 @Entity
 @Getter
@@ -14,13 +15,16 @@ public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private String status;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private TaskStatus status;
     private String title;
     private String description;
     private int userId;
 
 
-    public Task(String description, String status, String title, int userId) {
+    public Task(String description, TaskStatus status, String title, int userId) {
         this.description = description;
         this.status = status;
         this.title = title;

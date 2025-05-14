@@ -1,6 +1,7 @@
 package t1.exercises.exercise.dtos;
 
 import lombok.*;
+import t1.exercises.exercise.enums.TaskStatus;
 
 import java.io.Serializable;
 
@@ -12,7 +13,7 @@ import java.io.Serializable;
 @ToString
 public class TaskDTO {
     private int id;
-    private String status;
+    private TaskStatus status;
     private String title;
     private String description;
     private int userId;
