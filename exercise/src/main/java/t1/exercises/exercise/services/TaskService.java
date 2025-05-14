@@ -1,7 +1,9 @@
 package t1.exercises.exercise.services;
 
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import t1.exercises.exercise.annotations.ExceptionHandler;
@@ -20,11 +22,16 @@ public class TaskService {
 
     private final TaskRepository taskRepository;
     private final TaskMapper taskMapper;
+    private final KafkaTemplate<String, TaskDTO> kafkaTemplate;
+
+    @Value("${my.kafka.topics.task-updating}")
+    private String taskUpdatingTopic;
 
 
-    public TaskService(TaskRepository taskRepository, TaskMapper taskMapper) {
+    public TaskService(TaskRepository taskRepository, TaskMapper taskMapper,KafkaTemplate<String, TaskDTO> kafkaTemplate) {
         this.taskRepository = taskRepository;
         this.taskMapper = taskMapper;
+        this.kafkaTemplate = kafkaTemplate;
     }
 
     @Loggable
@@ -42,10 +49,15 @@ public class TaskService {
     public TaskDTO updateTask(int id, TaskDTO taskDTO) {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Task not found"));
+        boolean statusChanged = task.getStatus() != taskDTO.getStatus();
+        task.setStatus(taskDTO.getStatus());
         task.setTitle(taskDTO.getTitle());
         task.setDescription(taskDTO.getDescription());
         task.setUserId(taskDTO.getUserId());
         taskRepository.save(task);
+        if(statusChanged){
+            kafkaTemplate.send(taskUpdatingTopic, taskDTO);
+        }
         return taskMapper.toDTO(task);
     }
 
