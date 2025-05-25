@@ -6,9 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import t1.exercises.exercise.annotations.ExceptionHandler;
-import t1.exercises.exercise.annotations.Loggable;
-import t1.exercises.exercise.annotations.ReturningHandler;
+
 import t1.exercises.exercise.dtos.TaskDTO;
 import t1.exercises.exercise.entities.Task;
 import t1.exercises.exercise.mappers.TaskMapper;
@@ -34,18 +32,14 @@ public class TaskService {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    @Loggable
-    @ExceptionHandler
-    @ReturningHandler
+
     public TaskDTO getTaskById(int id) {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Task not found"));
         return taskMapper.toDTO(task);
     }
 
-    @Loggable
-    @ExceptionHandler
-    @ReturningHandler
+
     public TaskDTO updateTask(int id, TaskDTO taskDTO) {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Task not found"));
@@ -61,25 +55,19 @@ public class TaskService {
         return taskMapper.toDTO(task);
     }
 
-    @Loggable
-    @ExceptionHandler
-    @ReturningHandler
     public void deleteTask(int id) {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Task not found"));
         taskRepository.delete(task);
     }
 
-    @Loggable
-    @ReturningHandler
+
     public TaskDTO saveTask(TaskDTO taskDTO) {
         Task task = taskRepository.save(taskMapper.toTask(taskDTO));
         taskDTO.setId(task.getId());
         return taskDTO;
     }
 
-    @Loggable
-    @ReturningHandler
     public List<TaskDTO> getAllTask() {
         List<Task> tasks = taskRepository.findAll();
         return taskMapper.toDTO(tasks);
