@@ -11,7 +11,7 @@ import java.util.List;
 public class TaskMapper {
 
     public Task toTask(TaskDTO taskDTO) {
-        Task task = new Task(taskDTO.getTitle(),taskDTO.getStatus(), taskDTO.getDescription(), taskDTO.getUserId());
+        Task task = new Task(taskDTO.getDescription(),taskDTO.getStatus(), taskDTO.getTitle(), taskDTO.getUserId());
         return task;
     }
 
