@@ -48,6 +48,7 @@ public class TaskService {
         task.setTitle(taskDTO.getTitle());
         task.setDescription(taskDTO.getDescription());
         task.setUserId(taskDTO.getUserId());
+        taskDTO.setId(task.getId());
         taskRepository.save(task);
         if(statusChanged){
             kafkaTemplate.send(taskUpdatingTopic, taskDTO);
